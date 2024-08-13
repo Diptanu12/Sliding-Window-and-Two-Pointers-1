@@ -1,0 +1,140 @@
+Pair in array with difference k
+You are given an array a of n integers and an integer k.
+
+Your task is to return the number of unique k-diff pairs in the array.
+
+A k-diff pair is an integer pair (nums[i], nums[j]), where the following are true:
+
+0 <= i, j < nums.length
+
+i != j
+
+nums[i] - nums[j] == k
+
+Input Format
+The first line contains two integers n and k.
+
+The second line contains n space seperated integers.
+
+Output Format
+Return an integer denoting the number of unique k-diff pairs in the array.
+
+Example 1
+Input
+
+5 2
+3 1 4 1 5
+Output
+
+2
+Explanation
+
+There are two 2-diff pairs in the array, (1, 3) and (3, 5).
+Although we have two 1s in the input, we should only return the number of unique pairs.
+Example 2
+Input
+
+5 0
+1 3 1 5 4
+Output
+
+1
+Explanation
+
+There is one 0-diff pair in the array, (1, 1).
+Constraints
+1 <= n <= 10000
+
+0 <= k <= 10^7
+
+1 <= a[i] <= 10^7
+
+Topics
+Hashing
+Binary Search
+Arr
+
+
+
+import java.io.*;
+import java.util.*;
+class Main{
+	public static void main (String[] args) {
+		Scanner sc=new Scanner(System.in);
+        int n,k;
+        n=sc.nextInt();
+        k=sc.nextInt();
+        int[] a= new int[n];
+        for(int i=0;i<n;i++){
+          a[i] = sc.nextInt();
+        }
+        Solution obj=new Solution();
+        System.out.println(obj.findPairs(a,n,k));		    
+    }
+}
+
+class Solution
+{
+    public int findPairs(int[] nums,int n, int k) {
+        
+        Arrays.sort(nums);
+        int cnt = 0;
+        if(k == 0) {
+            
+            int i = 0;
+            while(i < n - 1) {
+                
+                if(nums[i] == nums[i+1]) {
+                    cnt++;
+                    // next diff
+                    while(i < n - 1) {
+                        if(nums[i] == nums[i+1]) i++;
+                        else break;
+                    } 
+                }
+
+                i++;
+            }
+
+            return cnt;
+        }
+
+
+        
+        ArrayList<Integer> al = new ArrayList<>();
+        // remove duplicate
+        
+        for(int i = 1; i < n; i++) {
+            if(nums[i] != nums[i-1]) {
+                al.add(nums[i-1]);
+            }
+        }
+
+        al.add(nums[n-1]);
+
+        //System.out.println(al);
+        n = al.size();
+        int i = 0, j = 1;
+        
+        while (j < n) {
+            
+            int curr = al.get(j) - al.get(i);
+            if(curr == k) {
+                cnt++;
+                i++;
+                j++;
+            }else if(curr < k) {
+                j++;
+            }else {
+                i++;
+            }
+
+            if(i == j) {
+                j++;
+            }
+            
+        }
+
+        return cnt;
+    }
+}
